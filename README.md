@@ -1,2 +1,2 @@
-# CryptoCurrency-historical-data-retriever
+# CryptoCurrency Historical Data Retriever
  
