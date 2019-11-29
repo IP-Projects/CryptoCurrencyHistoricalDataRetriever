@@ -65,7 +65,7 @@ def accessWebsite(url, reqheaders):
             rowData[1:] = convertToFloat(rowData[1:])
             data.append(rowData)
         filename = cryptoCurrency+'_price_'+startTime+'_'+endTime
-        with open(filename, 'w', newline='') as file:
+        with open(filename+'_desc.csv', 'w', newline='') as file:
             csvFileWriter = csv.writer(file, delimiter=',')
             csvFileWriter.writerow(header)
             for row in data:
@@ -87,8 +87,7 @@ def convertToFloat(listOfNumbers):
 def removeSymbolFromFile(filename):
     for i, line in enumerate(fileinput.input(filename, inplace=1)):
         sys.stdout.write(line.replace('\"', '').replace(
-            '*', '').replace(
-            ',', ', '))  # replace '"' and write ''
+            '*', ''))  # replace '"' and write ''
 
 
 def reverseCSV(path, savePath):
