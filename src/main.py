@@ -39,7 +39,7 @@ def createUrl(baseUrl, crypto, start, end):
 
 def accessWebsite(url, reqheaders):
     cryptoCurrency = "bitcoin"
-    startTime = convertDateTimeToString(datetime(2019, 1, 1))
+    startTime = convertDateTimeToString(datetime(2017, 1, 1))
     endTime = convertDateTimeToString(datetime.now())
     site = createUrl(url, cryptoCurrency, startTime, endTime)
     req = urllib.request.Request(site, headers=reqheaders)
@@ -61,16 +61,17 @@ def accessWebsite(url, reqheaders):
                 rowData.append(cell.get_text())
             # convert first field from string date Nov 4, 2019 to yyyy/MM/dd
             rowData[0] = datetime.strptime(
-                rowData[0], '%b %d, %Y').strftime('%Y/%m/%d')
+                rowData[0], '%b %d, %Y').strftime('%Y-%m-%d')
             rowData[1:] = convertToFloat(rowData[1:])
             data.append(rowData)
-        filename = cryptoCurrency+'_price_'+startTime+'_'+endTime+'.csv'
+        filename = cryptoCurrency+'_price_'+startTime+'_'+endTime
         with open(filename, 'w', newline='') as file:
             csvFileWriter = csv.writer(file, delimiter=',')
             csvFileWriter.writerow(header)
             for row in data:
                 csvFileWriter.writerow(row)
-        removeSymbolFromFile(filename)
+        removeSymbolFromFile(filename+'_desc.csv')
+        reverseCSV(filename+'_desc.csv', filename+'_asc.csv')
 
     except Exception as e:
         print("An exception occurred")
@@ -88,6 +89,15 @@ def removeSymbolFromFile(filename):
         sys.stdout.write(line.replace('\"', '').replace(
             '*', '').replace(
             ',', ', '))  # replace '"' and write ''
+
+
+def reverseCSV(path, savePath):
+    with open(path, 'r') as file:
+        with open(savePath, 'w') as saveFile:
+            saveFile.write(file.readline())
+            saveFile.writelines(reversed(file.readlines()))
+            # for row in reversed(list(csv.reader(textfile))):
+            #     print ', '.join(row)
 
 
 accessWebsite(baseUrl, reqheaders)
